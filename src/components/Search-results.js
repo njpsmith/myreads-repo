@@ -3,35 +3,35 @@ import React from 'react'
 import Book from './Book.js'
 
 class SearchResults extends React.Component {
+	state = {
+		books: []
+	}
 
-
+	handleChange = (book, newBookShelf) => {	              
+    this.props.handleChange(book, newBookShelf);
+  }
 
 
 	render() {
-
-
-
 		return (
 
 			<div className="search-books-results">
 			  <ol className="books-grid">
 
 
-			  	{this.props.searchResults.map( (book) => (
-	   				<li key={book.title}>
-	   					<Book
-	   						handleChange={(bookShelf, bookName) => {
-		              // console.log(bookShelf);
-		              // console.log(bookName);
-		              this.handleChange(bookShelf, bookName);
-		            }}
-	   						book={book}
-	   						currentBookshelf={book.shelf}
-	   						bookName={book.title}
-	   						bookCover={book.imageLinks.smallThumbnail}
-	   					/>
-	   				</li>
-	   			) )}
+				  	{(Array.isArray(this.props.searchResults) && this.props.searchResults.map( (book) => (
+		   				<li key={book.id}>
+		   					<Book
+		   						handleChange={(bookName, bookShelf) => {
+			              this.handleChange(bookName, bookShelf);
+			            }}
+		   						book={book}
+		   						currentBookshelf={book.shelf}
+		   						bookName={book.title}
+		   						imageLinks={book.imageLinks}
+		   					/>
+		   				</li>
+		   			) )) || 'No books found!'}
 
 			  	
 			  </ol>

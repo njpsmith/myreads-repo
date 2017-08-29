@@ -5,8 +5,6 @@ import Book from './Book.js'
 
 class Bookshelf extends React.Component {
 	handleChange = (book, newBookShelf) => {
-		// console.log(bookShelf);
-		// console.log(bookName);		              
     this.props.handleChange(book, newBookShelf);
   }
 
@@ -21,16 +19,14 @@ class Bookshelf extends React.Component {
 	          	{this.props.books.map( (book) => (
 			   				<li key={book.title}>
 			   					<Book
-			   						handleChange={(bookShelf, bookName) => {
-				              // console.log(bookShelf);
-				              // console.log(bookName);
-				              this.handleChange(bookShelf, bookName);
+			   						handleChange={(bookName, bookShelf) => {
+				              this.handleChange(bookName, bookShelf);
 				            }}
 			   						book={book}
 			   						currentBookshelf={book.shelf}
 			   						bookName={book.title}
-			   						author={book.authors['0']}
-			   						bookCover={book.imageLinks.smallThumbnail}
+			   						authors={book.authors}
+			   						imageLinks={book.imageLinks}
 			   					/>
 			   				</li>
 			   			) )}

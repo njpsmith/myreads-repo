@@ -4,7 +4,7 @@ import './App.css'
 import Bookshelf from './components/Bookshelf.js'
 import SearchForm from './components/Search-form.js'
 import SearchResults from './components/Search-results.js'
-import escapeRegExp from 'escape-string-regexp'
+// import escapeRegExp from 'escape-string-regexp'
 import { Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
@@ -26,7 +26,7 @@ class BooksApp extends React.Component {
     showSearchPage: false,
     books: [],
     query: "",
-    searchResults: ""
+    searchResults: []
   }
 
 
@@ -39,56 +39,41 @@ class BooksApp extends React.Component {
 
 
   handleChange = (book, newBookShelf) => {
-    const updatedBookList = this.state.books.map(b => { 
+    let bookOnShelf = false;
+    let updatedBookList = this.state.books.map(b => { 
       if (b.id === book.id && b.shelf !== newBookShelf) {  
         b.shelf = newBookShelf;
-      } else { 
-        b.shelf = b.shelf;
+        bookOnShelf = true;
       }
       return b 
-    })
-
-    this.setState({
-      books: updatedBookList
     });
-    BooksAPI.update(book, newBookShelf);
+
+    if (!bookOnShelf) {
+      updatedBookList.push(book);
+    }
+
+    BooksAPI.update(book, newBookShelf).then((result) => {
+      BooksAPI.getAll().then((books) => {
+        this.setState({ books })
+      });
+    });
   }
 
 
   userSearches = (userInput) => {
-    // console.log(userInput);
     // search in API
-    // this.state.query = BooksAPI.search(userInput, maxResults);
     if(userInput) {
       BooksAPI.search(userInput,maxResults).then((searchResults) => {
         this.setState({
-          books: searchResults
+          searchResults: searchResults
         })
       });
     }
-    // console.log(this.state.searchResults);
   }
 
 
 
   render() {
-    // BooksAPI.getAll().then(response => console.log(response))
-    // const { query } = this.state;
-    
-    // let searchResults
-    // if (query) {
-      // const match = new RegExp(escapeRegExp(query), 'i');
-      // searchResults = this.state.books.filter((book) => match.test(book.title));
-      // this.setState(searchResults: searchResultsTemp);
-      // console.log(searchResults);
-      // const searchResultsBookTitles = searchResults.map((book) => book.title)
-      // console.log(searchResultsBookTitles);
-    // } else {
-      // searchResults = books
-    // }
-    
-
-
     return (
       <div className="app">
         
@@ -102,7 +87,10 @@ class BooksApp extends React.Component {
             />
 
             <SearchResults
-              searchResults={this.state.books}
+              handleChange={(book, newBookShelf) => {  
+                this.handleChange(book, newBookShelf);
+              }}
+              searchResults={this.state.searchResults}
             />
           </div>
         )}/>
@@ -119,8 +107,6 @@ class BooksApp extends React.Component {
                 {SHELVES.map((shelf) => (
                   <Bookshelf key={shelf.title}
                     handleChange={(book, newBookShelf) => {  
-                      // console.log(bookShelf);
-                      // console.log(bookName);
                       this.handleChange(book, newBookShelf);
                     }}
                     title={shelf.title}
