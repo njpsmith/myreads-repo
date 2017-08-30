@@ -70,20 +70,6 @@ class BooksApp extends React.Component {
         this.setState({
           searchResults: searchResults
         })
-
-
-        // console.log(this.state.books)
-        // console.log(searchResults)
-
-        // Search (map) through searchResults and check if any of them already exist in your list of books
-        // let updatedBookList = this.state.books.map(b => { 
-        //   if (b.id === book.id && b.shelf !== newBookShelf) {  
-        //     b.shelf = newBookShelf;
-        //   }
-        //   return b 
-        // });
-
-        // If the one of the books from the search result exists in your personal list of books, change it to the appropriate shelf type
       });
     }
   }
