@@ -3,9 +3,6 @@ import React from 'react'
 import Book from './Book.js'
 
 class SearchResults extends React.Component {
-	state = {
-		books: []
-	}
 
 	handleChange = (book, newBookShelf) => {	              
     this.props.handleChange(book, newBookShelf);
@@ -25,9 +22,8 @@ class SearchResults extends React.Component {
 		   						handleChange={(bookName, bookShelf) => {
 			              this.handleChange(bookName, bookShelf);
 			            }}
+			            books={this.props.books}
 		   						book={book}
-		   						currentBookshelf={book.shelf}
-		   						bookName={book.title}
 		   						imageLinks={book.imageLinks}
 		   					/>
 		   				</li>

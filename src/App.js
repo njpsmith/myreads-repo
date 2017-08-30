@@ -4,7 +4,6 @@ import './App.css'
 import Bookshelf from './components/Bookshelf.js'
 import SearchForm from './components/Search-form.js'
 import SearchResults from './components/Search-results.js'
-// import escapeRegExp from 'escape-string-regexp'
 import { Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
@@ -23,7 +22,6 @@ const maxResults = 20;
 
 class BooksApp extends React.Component {
   state = {
-    showSearchPage: false,
     books: [],
     query: "",
     searchResults: []
@@ -33,6 +31,7 @@ class BooksApp extends React.Component {
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
+      // console.log(books)
     })
   }
 
@@ -53,9 +52,13 @@ class BooksApp extends React.Component {
     }
 
     BooksAPI.update(book, newBookShelf).then((result) => {
-      BooksAPI.getAll().then((books) => {
-        this.setState({ books })
-      });
+    
+      book.shelf = newBookShelf
+      // Filter out the book and append it to the end of the list
+      // so it appears at the end of whatever shelf it was added to.
+      this.setState(state => ({
+        books: state.books.filter(b => b.id !== book.id).concat([ book ])
+      }))
     });
   }
 
@@ -67,6 +70,20 @@ class BooksApp extends React.Component {
         this.setState({
           searchResults: searchResults
         })
+
+
+        // console.log(this.state.books)
+        // console.log(searchResults)
+
+        // Search (map) through searchResults and check if any of them already exist in your list of books
+        // let updatedBookList = this.state.books.map(b => { 
+        //   if (b.id === book.id && b.shelf !== newBookShelf) {  
+        //     b.shelf = newBookShelf;
+        //   }
+        //   return b 
+        // });
+
+        // If the one of the books from the search result exists in your personal list of books, change it to the appropriate shelf type
       });
     }
   }
@@ -90,6 +107,7 @@ class BooksApp extends React.Component {
               handleChange={(book, newBookShelf) => {  
                 this.handleChange(book, newBookShelf);
               }}
+              books={this.state.books}
               searchResults={this.state.searchResults}
             />
           </div>

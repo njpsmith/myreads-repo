@@ -23,9 +23,6 @@ class Bookshelf extends React.Component {
 				              this.handleChange(bookName, bookShelf);
 				            }}
 			   						book={book}
-			   						currentBookshelf={book.shelf}
-			   						bookName={book.title}
-			   						authors={book.authors}
 			   						imageLinks={book.imageLinks}
 			   					/>
 			   				</li>
